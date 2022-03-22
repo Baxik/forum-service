@@ -1,10 +1,12 @@
 package telran.java41.forum.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import telran.java41.forum.dao.PostRepository;
 import telran.java41.forum.dto.CommentDto;
@@ -84,19 +86,26 @@ public class ForumServiceImpl implements ForumService {
 	@Override
 	public Iterable<PostDto> findPostsByAuthor(String author) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return postRepository.findByAuthorIgnoreCase(author)
+				.map(p -> modelMapper.map(p, PostDto.class))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Iterable<PostDto> findPostsByTags(List<String> tags) {
 		// TODO Auto-generated method stub
-		return null;
+		return postRepository.findByTags(tags)
+				.map(p -> modelMapper.map(p, PostDto.class))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Iterable<PostDto> findPostsByDates(DatePeriodDto datePeriodDto) {
 		// TODO Auto-generated method stub
-		return null;
+		return postRepository.findByDateCreatedBetween(datePeriodDto.getDateFrom(), datePeriodDto.getDateTo())
+				.map(p -> modelMapper.map(p, PostDto.class))
+				.collect(Collectors.toList());
 	}
 
 }
